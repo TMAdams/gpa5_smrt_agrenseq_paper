@@ -1,0 +1,73 @@
+TREE_COLORS
+#use this template to define branch colors and styles, colored ranges and label colors/font styles/backgrounds
+#lines starting with a hash are comments and ignored during parsing
+
+#=================================================================#
+#                    MANDATORY SETTINGS                           #
+#=================================================================#
+#select the separator which is used to delimit the data below (TAB,SPACE or COMMA).This separator must be used throughout this file.
+
+#SEPARATOR TAB
+SEPARATOR SPACE
+#SEPARATOR COMMA
+
+#First 3 fields define the node, type and color
+#Possible types are:
+#'range': defines a colored range (colored background for labels/clade)
+#'clade': defines color/style for all branches in a clade
+#'branch': defines color/style for a single branch
+#'label': defines font color/style for the leaf label
+#'label_background': defines the leaf label background color
+
+#The following additional fields are required:
+#for 'range', field 4 defines the colored range label (used in the legend)
+
+#The following additional fields are optional:
+#for 'label', field 4 defines the font style ('normal',''bold', 'italic' or 'bold-italic') and field 5 defines the numeric scale factor for the font size (eg. with value 2, font size for that label will be 2x the standard size)
+#for 'clade' and 'branch', field 4 defines the branch style ('normal' or 'dashed') and field 5 defines the branch width scale factor (eg. with value 0.5, branch width for that clade will be 0.5 the standard width)
+
+#Internal tree nodes can be specified using IDs directly, or using the 'last common ancestor' method described in iTOL help pages
+#=================================================================#
+#       Actual data follows after the "DATA" keyword              #
+#=================================================================#
+DATA
+#NODE_ID TYPE COLOR LABEL_OR_STYLE SIZE_FACTOR
+AF447489_1_Rpi_R1_orf6065_560-806 label_background #e69f00
+Rpi_R1_Sd_orf6446_560-806 label_background #e69f00
+tig00000086_nlr_1_orf33042_560-806 label_background #e69f0040
+tig00000086_nlr_2_orf33147_568-812 label_background #e69f0040
+tig00000086_nlr_3_orf33278_469-715 label_background #e69f0040
+FJ536323_1_Rpi_R2-like_orf5877_204-445 label_background #f0e442
+tig00000744_nlr_1_orf200886_202-445 label_background #f0e44240
+tig00000785_nlr_2_orf207079_191-434 label_background #f0e44240
+tig00000803_nlr_1_orf209980_169-409 label_background #f0e44240
+tig00001044_nlr_1_orf246977_173-418 label_background #f0e44240
+tig00001890_nlr_1_orf329895_206-450 label_background #f0e44240
+tig00002086_nlr_1_orf343231_173-415 label_background #f0e44240
+tig00002133_nlr_1_orf345297_200-440 label_background #f0e44240
+tig00001243_nlr_1_orf271855_194-435 label_background #f0e44240
+AY849382_1_Rpi_R3a_orf5097_200-421 label_background #0072b2
+tig00000125_nlr_1_orf53448_195-417 label_background #0072b240
+tig00000141_nlr_1_orf58238_41-256 label_background #0072b240
+tig00000141_nlr_2_orf58378_214-436 label_background #0072b240
+tig00000180_nlr_1_orf74006_200-421 label_background #0072b240
+tig00000180_nlr_2_orf74128_200-421 label_background #0072b240
+tig00000330_nlr_1_orf118661_194-415 label_background #0072b240
+tig00000330_nlr_2_orf118841_180-401 label_background #0072b240
+tig00000652_nlr_1_orf187274_191-411 label_background #0072b240
+tig00000772_nlr_1_orf205971_195-415 label_background #0072b240
+tig00001447_nlr_1_orf292756_188-409 label_background #0072b240
+tig00001915_nlr_1_orf330984_195-416 label_background #0072b240
+Rpi_R3b_2070_54_orf4799_200-438 label_background #009e73
+JF900492_1_Rpi_R3b_orf4555_200-438 label_background #009e73
+tig00000194_nlr_1_orf78924_205-426 label_background #009e7340
+tig00000301_nlr_2_orf112115_200-372 label_background #009e7340
+tig00000061_nlr_1_orf17858_28-116 label_background #cc79a740
+tig00000061_nlr_1_orf17850_424-581 label_background #cc79a740
+tig00000061_nlr_2_orf18038_467-673 label_background #cc79a740
+tig00000061_nlr_3_orf18330_469-715 label_background #cc79a740
+tig00000835_nlr_1_orf216062_218-463 label_background #cc79a740
+tig00001254_nlr_1_orf272826_469-716 label_background #cc79a740
+tig00001841_nlr_1_orf326611_469-715 label_background #cc79a740
+tig00001945_nlr_2_orf333393_469-715 label_background #cc79a740
+tig00004340_nlr_1_orf407518_568-812 label_background #cc79a740
