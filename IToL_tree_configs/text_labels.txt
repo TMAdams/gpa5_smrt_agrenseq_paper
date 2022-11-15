@@ -25,7 +25,7 @@ COLOR #02f50b
 #=================================================================#
 
 #left margin, used to increase/decrease the spacing to the next dataset. Can be negative, causing datasets to overlap. Used only for text labels which are displayed on the outside
-MARGIN 50
+MARGIN -300
 
 #applies to external text labels only; if set, text labels associated to internal nodes will be displayed even if these nodes are not collapsed. It could cause overlapping in the dataset display.
 SHOW_INTERNAL 0
@@ -79,7 +79,7 @@ LABEL_SIZE_FACTOR 10
 #size factor will be multiplied with the standard font size
 
 DATA
-JF900492_1_Rpi_R3b_orf4555_200-438 R3 -1 #000000 bold
-tig00000279_nlr_1_orf105628_547-785 R1 -1 #000000 bold
-tig00002037_nlr_1_orf339824_16-260 NRCs -1 #000000 bold
-tig00001243_nlr_1_orf271855_194-435 R2-like -1 #000000 bold
+tig00000088_nlr_1_orf29001-200-437 R3 -1 #000000 bold
+tig00001260_nlr_1_orf236259-229-433 R1 -1 #000000 bold
+Solyc04g007050.3.1-163-397 NRCs -1 #000000 bold
+tig00001044_nlr_1_orf212517-173-418 R2-like -1 #000000 bold
