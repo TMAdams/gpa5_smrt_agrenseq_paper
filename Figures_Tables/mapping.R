@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 #3 files are needed: 1. .gff file for backgroud bar; 2. Chromose size file with header (format: chromosome	length(bp)); 3. .bed file for candidate contigs
 
 #load library

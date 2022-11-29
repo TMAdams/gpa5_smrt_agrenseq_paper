@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 #########################calculate F1 score##################################
 matrix_value_calculate <- function(input_table, phe_table, start_col, group_number){
   negative_start <- number_positive + 1

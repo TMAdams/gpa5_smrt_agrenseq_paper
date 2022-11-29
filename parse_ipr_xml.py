@@ -1,4 +1,4 @@
-#!/mnt/shared/scratch/tadams/apps/conda/bin/python
+#!/usr/bin/env python3
 
 # Script to parse output of nucleotide interproscan xml and extract an AA fasta
 # and a bed file of locations of requested features
