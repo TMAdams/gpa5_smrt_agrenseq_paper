@@ -7,12 +7,6 @@ library(ggplot2)
 require(grid)
 library(ggrepel)
 
-
-
-input_drenseq <- args[2]
-input_phenotype <- args[3]
-input_group_list <- args[4]
-output_name <- args[5]
 args <- commandArgs(TRUE)
 #set working directory 
 pwd <- args[1]
@@ -25,8 +19,8 @@ chromose_size <- args[3]
 bed_file <- args[4]
 #setting of output file and title of figure
 gene_name <- args[5]
-output_file<-"Gpa5_F1_mapping.png"
-fig_title<- "Gpa5 candidates locations"
+output_file <- paste(gene_name,"_mapping.png",sep="")
+fig_title <- paste(gene_name,"_candidates locations",sep="")
 
 #store data
 genSeqFile <- read.delim(reference_genome_gff, header=FALSE, stringsAsFactors=FALSE)
@@ -106,5 +100,5 @@ all_ch_bins$chr <- factor(all_ch_bins$chr, levels = c("chr01","chr02","chr03","c
       scale_y_continuous("Number of candidates per 1 Mb",expand=c(0.01,0)) +
       #geom_label(aes(label=candidates), all_ch_bins, alpha=0, nudge_y=3) +
       ggtitle(fig_title)
-    ggsave(filename = paste(output_file,sep=""), units="cm", width=36, height=12, dpi = 600)
+    ggsave(filename = output_file, units="cm", width=36, height=12, dpi = 600)
   }

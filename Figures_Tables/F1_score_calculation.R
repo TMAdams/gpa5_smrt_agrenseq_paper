@@ -141,6 +141,11 @@ output_name <- args[5]
 drenseq_score <- read.table(input_drenseq, sep = "\t", stringsAsFactors = F, header =T)
 phenotypice_table <- read.table(input_phenotype, sep = "\t", header = T)
 group_list <- read.table(input_group_list, sep = "\t", header = T)
+names(group_list) <- c("gene","association_score")
+max_association_score <- max(group_list$association_score)
+phenotype_merge_row <- c("phenotype", max_association_score)
+group_list <- rbind(phenotype_merge_row,group_list)
+names(phenotypice_table) <- c("gene","phenotype")
 
 output_table_name <- paste(output_name,"_drenseq_F1_table.csv",sep="")
 confusion_table_name <- paste(output_name,"_confuse_table.csv",sep="")
@@ -148,6 +153,7 @@ individual_confusion_table_name <- paste(output_name,"_individual_confusion_tabl
 png_name <- paste(output_name,"_F1.png",sep="")
 figure_title <- paste("F1 scores and number of candidates of ", output_name,sep="")
 number_positive <- sum(phenotypice_table$phenotype >= 0)
+
 
 first_table <- table_order(phenotypice_table, drenseq_score)
 second_table <- confusion_matrix_creat(group_list, first_table$group_con)
