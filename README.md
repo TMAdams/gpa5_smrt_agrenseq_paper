@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7389661.svg)](https://doi.org/10.5281/zenodo.7389661)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7389661.svg)](https://doi.org/10.5281/zenodo.7389660)
 
 # gpa5_smrt_agrenseq_paper
 Scripts utilised in the GPA5 SMrt-AgRenSeq paper
