@@ -371,5 +371,5 @@ path_to_jar=/mnt/shared/scratch/tadams/apps/PhyloPart_v2.1/PhyloPart_v2.1.jar
 tree=results/tree_rooted_clean_BS1000_noBS_pars.tre
 threshold=0.05
 output=results/tree_part_0_05.txt
-sbatch /mnt/shared/scratch/tadams/git_repos/H1_Analyses/run_PhyloPart.sh $tree $threshold $output $path_to_jar
+sbatch /mnt/shared/scratch/tadams/git_repos/JHI_Code/H1_Analyses/run_PhyloPart.sh $tree $threshold $output $path_to_jar
 ```
