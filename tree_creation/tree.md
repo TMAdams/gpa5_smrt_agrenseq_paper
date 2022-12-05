@@ -4,8 +4,6 @@
 
 ### Run interproscan over the NLR fasta to predict functional domains
 
-Installing interproscan is non-trivial. If you're having issues I have put together a markdown document explaining how I installed it, ask me if I forgot to pass it to you. Also if I forgot to pass you the scripts that are called, ask for them.
-
 ```bash
 cd ~/scratch
 input_fasta=Innovator_redo/NLR_Annotator/Innovator_NLR_Annotator.fa
@@ -31,8 +29,6 @@ sbatch git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/Extract_Domain_AA_from_Nuc.sh $
 
 ### Perform the alignment
 
-I attempted several alignment methods, I found using Clustal Omega to add the automated predictions to an alignment of the reference genes and outgroups worked well. Ask me for the reference gene alignment, it'll make life easier than re-running it!
-
 ```bash
 input=Innovator_redo/NLR_Annotator/NLR_Annotator_NBs.pep.fasta
 profile=reference_NLRs/combined_plus_outgroups_aligned.pep.fa
@@ -42,12 +38,6 @@ logs=Innovator_redo/Clustal_Omega.log
 sbatch git_repos/JHI_Code/H1_Analyses/Clustal_Omega_Profile_Align.sh $profile $input $output $iterations $logs
 ```
 ## Begin tree building process
-
-This is based on code from Konrad Neugebauer in BioSS.
-
-The r_phylogeny conda environment needs base R with the ape, phangorn and optparse libraries installed. Ask me for the yaml if I forgot to give it to you!
-
-I have a ticket open with ITS about X11 forwarding, for now you will need to run the alignment check locally to visualise the diagnostics properly.
 
 ### Check alignment
 
@@ -375,12 +365,6 @@ exit
 ```
 
 ### Partition the tree
-
-Download PhyloPart from <https://sourceforge.net/projects/phylopart/> and unzip it, there should be a jar file called PhyloPart_v2.1.jar
-
-You will likely also need a JRE installed, either do this in your base conda or create a conda environment. I use openjdk, but if you have a preferred JRE you're welcome to try it.
-
-You should try varying the threshold to see what is sensible for your tree
 
 ```bash
 path_to_jar=/mnt/shared/scratch/tadams/apps/PhyloPart_v2.1/PhyloPart_v2.1.jar
