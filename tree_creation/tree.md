@@ -11,7 +11,7 @@ cd ~/scratch
 input_fasta=/path/to/input/fasta
 outdir=/path/to/output/directory
 mkdir -p $outdir
-/path/to/run_interproscan_1_file.sh $input_fasta $outdir
+interproscan.sh -goterms -iprlookup -i $input_fasta -d $outdir -dp -pa -t n -T /path/to/tmp/dir
 ```
 
 ### Extract NB domains from the XML output of interproscan
@@ -26,12 +26,25 @@ feature=IPR002182
 pep_full=/path/to/write/full/protein/sequences
 bed_out=/path/to/write/BED/of/NB/domains
 domain_pep=/path/to/write/protein/sequences/of/NB/domains
-/path/to/Extract_Domain_AA_from_Nuc.sh $xml $feature $pep_full $bed_out $domain_pep # needs further breakdown
+
+python /path/to/parse_ipr_xml.py --xml $xml --feature $feature --pep_out $pep_full --bed_out $bed_out
+
+bedtools getfasta -fo $domain_pep -fi $pep_full -bed $bed_out
 ```
 
 ### Perform the alignment
 
-TODO: Add alignment of refs
+#### Align high-confidence reference sequences
+
+```bash
+input=/path/to/high/confidence/sequences
+output=/path/to/write/initial/alignment
+iterations=10
+logs=/path/to/write/log
+clustalo -i $input -o $output --iterations $iterations --threads /number/of/threads --log $logs
+```
+
+#### Add lower confidence sequences to the alignment
 
 ```bash
 input=/path/to/NB/fasta
@@ -39,7 +52,7 @@ profile=/path/to/alignment/of/references
 output=/path/to/write/aligned/output
 iterations=10
 logs=/path/to/write/log
-/path/to/Clustal_Omega_Profile_Align.sh $profile $input $output $iterations $logs
+clustalo --profile1 $profile -i $input -o $output --iterations $iterations --threads /number/of.threads --log $logs
 ```
 ## Begin tree building process
 
@@ -204,11 +217,10 @@ quit()
 ```
 
 ### Check the various models
-TODO: clean this up
+
 ```bash
-path_to_R_script=/path/to/model_check.R
 input_file=/path/to/cleaned/alignment
-/path/to/model_check.sh $path_to_R_script $input_file
+/path/to/model_check.R --inp $input_file
 ```
 
 ### Load model testing results and pick which to use
@@ -230,14 +242,13 @@ quit()
 ```
 
 ### Create an initial tree
-TODO: break down this script
+
 ```bash
-path_to_R_script=/path/to/build_tree.R
 input=/path/to/cleaned/fasta
 inv=FALSE
 gamma=TRUE
 output=/path/to/write/initial/tree
-/path/to/build_tree.sh $path_to_R_script $input $inv $gamma $output
+/path/to/build_tree.R --inp $input --inv $inv --gamma $gamma --outp $output
 ```
 
 ### OPTIONAL - make a re-rooted DRAFT tree as a quick first-look
@@ -270,10 +281,9 @@ quit()
 ```
 
 ### Bootstrap the tree - for the exemplar tree this took 15 hours
-TODO: clean up this bit
+
 ```bash
-path_to_R_script=/path/to/bootstrap_tree.R
-/path/to/bootstrap_tree.sh $path_to_R_script
+/path/to/bootstrap_tree.R --cores /number/of/threads/to/use
 ```
 
 ### Load bootstraps onto tree and re-root it
@@ -319,11 +329,11 @@ quit()
 ```
 
 ### Partition the tree
-TODO: clean this up
+
 ```bash
 path_to_jar=/path/to/PhyloPart_v2.1.jar
 tree=/path/to/bootstrapped/tree/without/bootstraps/in/newick
 threshold=0.05
 output=/path/to/write/partitioning/results
-/path/to/run_PhyloPart.sh $tree $threshold $output $path_to_jar
+java -jar $path_to_jar $tree $threshold -o"$output"
 ```
