@@ -1,15 +1,17 @@
 # Make a tree
 
+All code was run on the UK Crop Diversity HPC <https://www.cropdiversity.ac.uk/>, we recommend running the commands on a similar high-performance system to reduce runtime due to computationally demanding analyses.
+
 ## Example alignment construction, all Innovator NLRs plus a reference set of NLRs and NRCs
 
 ### Run interproscan over the NLR fasta to predict functional domains
 
 ```bash
 cd ~/scratch
-input_fasta=Innovator_redo/NLR_Annotator/Innovator_NLR_Annotator.fa
-outdir=Innovator_redo/interproscan
+input_fasta=/path/to/input/fasta
+outdir=/path/to/output/directory
 mkdir -p $outdir
-sbatch git_repos/JHI_Code/Pan_NLRome/run_interproscan_1_file.sh $input_fasta $outdir
+/path/to/run_interproscan_1_file.sh $input_fasta $outdir
 ```
 
 ### Extract NB domains from the XML output of interproscan
