@@ -94,7 +94,7 @@ freqs <- data.frame(
   Frequency = baseFreq(msa_raw, all = TRUE, drop.unused.levels = TRUE)
 )
 round(freqs, digits = 3)
-# I have 55.7% missing data
+# We have 55.7% missing data initially
 
 # Check for duplicate sequence IDs
 
@@ -107,7 +107,7 @@ anyDuplicated(labels_raw)
 image(msa_raw, xlab = "Site", ylab = "Sequence", xaxt = "n", show.labels = FALSE,
       xlim = c(0,450))
 axis(side = 1, at = seq(from = 0, to = 450, by = 50))
-# Yikes that's a lot of gaps
+# There are many gaps in the alignment
 
 # Quantify missing sites
 
@@ -131,7 +131,7 @@ hist(
 )
 abline(v = mean(missing_cols), lwd = 3, lty = 1, col = "black")
 abline(v = median(missing_cols), lwd = 3, lty = 2, col = "tomato")
-# 85% looks okay
+# 85% is a reasonable threshold
 
 # Remove sites with 85% or more missing data
 
@@ -159,7 +159,7 @@ hist(
 )
 abline(v = mean(missing_rows), lwd = 3, lty = 1, col = "black")
 abline(v = median(missing_rows), lwd = 3, lty = 2, col = "tomato")
-# 85% looks fine
+# 85% is a reasonable threshold
 
 # Remove sequences with high amounts of missing data
 
@@ -200,23 +200,24 @@ freqs <- data.frame(
   Frequency = baseFreq(msa_unique, all = TRUE, drop.unused.levels = TRUE)
 )
 round(freqs, digits = 3)
-# Drop to 29%, not bad
+# Drops to 29%
 
 # Visualise alignment
 
 image(msa_unique, xlab = "Site", ylab = "Sequence", xaxt = "n", show.labels = FALSE,
       xlim = c(0,300))
 axis(side = 1, at = seq(from = 0, to = 300, by = 50))
-# That looks better
+# Alignment now appears much more informative
 
 # Write out new alignment
 
 write.phyDat(msa_unique, file = "/path/to/write/filtered/alignment",
              format = "fasta")
-quit()
 ```
 
 ### Check the various models
+
+Executes bootstrap_tree.R
 
 ```bash
 input_file=/path/to/cleaned/alignment
@@ -237,11 +238,11 @@ mt_clean_pars <- readRDS("/path/to/cleaned/data/R/object")
 mt_clean_pars[order(mt_clean_pars$BIC, decreasing = FALSE), ]
 
 # Select the model with the lowest BIC value, in this case JTT+G
-
-quit()
 ```
 
 ### Create an initial tree
+
+Executes build_tree.R
 
 ```bash
 input=/path/to/cleaned/fasta
@@ -276,11 +277,11 @@ tree_clean_pars_root <- root(tree_clean_pars, outgroup = outgroup, resolve.root 
 # Save re-rooted tree
 
 write.tree(tree_clean_pars_root, file = "/path/to/rooted/tree")
-
-quit()
 ```
 
-### Bootstrap the tree - for the exemplar tree this took 15 hours
+### Bootstrap the tree - for this tree it took 15 hours
+
+Executes bootstrap_tree.R
 
 ```bash
 /path/to/bootstrap_tree.R --cores /number/of/threads/to/use
@@ -319,13 +320,12 @@ write.tree(tree_clean_pars_bs_root, file = "/path/to/write/bootstrapped/tree")
 
 # Remove bootstrap values to allow partitioning
 
-tree_clean_pars_bs_root$node.label <- NULL
+tree_clean_pars_nobs_vals_root <- tree_clean_pars_bs_root
+tree_clean_pars_nobs_vals_root$node.label <- NULL
 
 # Save tree without bootstrap values
 
-write.tree(tree_clean_pars_bs_root, file = "/path/to/write/tree/without/bootstrap/values/in/newick")
-
-quit()
+write.tree(tree_clean_pars_nobs_vals_root, file = "/path/to/write/tree/without/bootstrap/values/in/newick")
 ```
 
 ### Partition the tree

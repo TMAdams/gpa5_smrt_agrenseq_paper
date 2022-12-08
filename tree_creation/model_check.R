@@ -21,11 +21,14 @@ par(newpar)
 
 opt_list <- list(
     make_option("--inp", type = "character",
-    help = "Path to input alignment file")
+    help = "Path to input alignment file"),
+    make_option("--cores", type = "character",
+    help = "Number of CPU cores to use")
 )
 
 opt <- parse_args(OptionParser(option_list = opt_list))
 inp <- opt$inp
+cores <- opt$cores
 
 # Read in alignment
 
@@ -40,7 +43,8 @@ msa_clean <- read.phyDat(
 mt_clean_pars <- modelTest(
   object = msa_clean,
   model = c("JTT", "LG", "WAG"),
-  multicore = FALSE
+  multicore = TRUE,
+  mc.cores = cores
 )
 
 # Save this data for later use
