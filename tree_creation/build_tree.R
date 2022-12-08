@@ -44,7 +44,7 @@ msa_clean <- read.phyDat(
   type = "AA"
 )
 
-mt_clean_pars <- readRDS("results/intermediate/mt_clean_pars.rds")
+mt_clean_pars <- readRDS("/path/to/write/mt_clean_pars.rds")
 
 # Create a pml object to build a maximum likelihood tree
 
@@ -61,6 +61,6 @@ fit_clean_opt_pars <- optim.pml(
 
 # Write out files
 
-saveRDS(fit_clean_opt_pars, "results/intermediate/fit_clean_opt_pars.rds")
+saveRDS(fit_clean_opt_pars, "/path/to/write/fit_clean_opt_pars.rds")
 
 write.tree(fit_clean_opt_pars$tree, file = outp)

@@ -19,7 +19,7 @@ cores <- opt$cores
 
 # Load in the object with the un-bootstrapped tree
 
-fit_clean_opt <- readRDS("results/intermediate/fit_clean_opt_pars.rds")
+fit_clean_opt <- readRDS("/path/to/write/fit_clean_opt_pars.rds")
 
 # Specify random seed
 
@@ -30,4 +30,4 @@ bs_clean <- bootstrap.pml(fit_clean_opt, bs = 1000, optNni = TRUE,
 
 # Save output
 
-saveRDS(bs_clean, "results/bs_clean_pars1000.rds")
+saveRDS(bs_clean, "/path/to/write/bs_clean_pars1000.rds")

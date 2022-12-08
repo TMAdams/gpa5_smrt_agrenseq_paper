@@ -45,4 +45,4 @@ mt_clean_pars <- modelTest(
 
 # Save this data for later use
 
-saveRDS(mt_clean_pars, file = "results/intermediate/mt_clean_pars.rds")
+saveRDS(mt_clean_pars, file = "/path/to/write/mt_clean_pars.rds")

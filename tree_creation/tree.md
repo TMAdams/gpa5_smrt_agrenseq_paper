@@ -1,15 +1,17 @@
 # Make a tree
 
+All code was run on the UK Crop Diversity HPC <https://www.cropdiversity.ac.uk/>, we recommend running the commands on a similar high-performance system to reduce runtime due to computationally demanding analyses.
+
 ## Example alignment construction, all Innovator NLRs plus a reference set of NLRs and NRCs
 
 ### Run interproscan over the NLR fasta to predict functional domains
 
 ```bash
 cd ~/scratch
-input_fasta=Innovator_redo/NLR_Annotator/Innovator_NLR_Annotator.fa
-outdir=Innovator_redo/interproscan
+input_fasta=/path/to/input/fasta
+outdir=/path/to/output/directory
 mkdir -p $outdir
-sbatch git_repos/JHI_Code/Pan_NLRome/run_interproscan_1_file.sh $input_fasta $outdir
+interproscan.sh -goterms -iprlookup -i $input_fasta -d $outdir -dp -pa -t n -T /path/to/tmp/dir
 ```
 
 ### Extract NB domains from the XML output of interproscan
@@ -19,36 +21,42 @@ This was the most recent at the time, but if your version number is HIGHER than 
 This only looks for hits found by hmmr3, if you need ones called by a different analysis you will need to change the script.
 
 ```bash
-xml=Innovator_redo/interproscan/Innovator_NLR_Annotator.fa.xml
+xml=/path/to/interproscan/xml
 feature=IPR002182
-pep_full=Innovator_redo/NLR_Annotator/NLR_Annotator_full.pep.fasta
-bed_out=Innovator_redo/NLR_Annotator/NLR_Annotator_NBs.bed
-domain_pep=Innovator_redo/NLR_Annotator/NLR_Annotator_NBs.pep.fasta
-sbatch git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/Extract_Domain_AA_from_Nuc.sh $xml $feature $pep_full $bed_out $domain_pep
+pep_full=/path/to/write/full/protein/sequences
+bed_out=/path/to/write/BED/of/NB/domains
+domain_pep=/path/to/write/protein/sequences/of/NB/domains
+
+python /path/to/parse_ipr_xml.py --xml $xml --feature $feature --pep_out $pep_full --bed_out $bed_out
+
+bedtools getfasta -fo $domain_pep -fi $pep_full -bed $bed_out
 ```
 
 ### Perform the alignment
 
+#### Align high-confidence reference sequences
+
 ```bash
-input=Innovator_redo/NLR_Annotator/NLR_Annotator_NBs.pep.fasta
-profile=reference_NLRs/combined_plus_outgroups_aligned.pep.fa
-output=Innovator_redo/Innovator_aligned_reference_outgroups_clustal_omega.fa
-iterations=10 # Feel free to change this, I haven't titrated it
-logs=Innovator_redo/Clustal_Omega.log
-sbatch git_repos/JHI_Code/H1_Analyses/Clustal_Omega_Profile_Align.sh $profile $input $output $iterations $logs
+input=/path/to/high/confidence/sequences
+output=/path/to/write/initial/alignment
+iterations=10
+logs=/path/to/write/log
+clustalo -i $input -o $output --iterations $iterations --threads /number/of/threads --log $logs
+```
+
+#### Add lower confidence sequences to the alignment
+
+```bash
+input=/path/to/NB/fasta
+profile=/path/to/alignment/of/references
+output=/path/to/write/aligned/output
+iterations=10
+logs=/path/to/write/log
+clustalo --profile1 $profile -i $input -o $output --iterations $iterations --threads /number/of.threads --log $logs
 ```
 ## Begin tree building process
 
 ### Check alignment
-
-```bash
-screen -
-srsh
-conda activate r_phylogeny
-mkdir -p results/intermediate
-
-R
-```
 
 ```R
 # Load libraries
@@ -70,7 +78,7 @@ par(newpar)
 # Load alignment
 
 msa_raw <- read.phyDat(
-  "/mnt/shared/scratch/tadams/Innovator_redo/Innovator_aligned_reference_outgroups_clustal_omega.fa",
+  "/path/to/alignment/fasta",
   format = "fasta",
   type = "AA"
 )
@@ -176,7 +184,7 @@ labels_removed <- rbind(
 
 write.csv(
 labels_removed,
-"results/labels_removed.csv",
+"/path/to/write/csv/of/removed/samples",
 row.names = FALSE
 )
 
@@ -203,32 +211,19 @@ axis(side = 1, at = seq(from = 0, to = 300, by = 50))
 
 # Write out new alignment
 
-write.phyDat(msa_unique, file = "results/msa_filtered.fasta",
+write.phyDat(msa_unique, file = "/path/to/write/filtered/alignment",
              format = "fasta")
 quit()
-```
-
-```bash
-exit
-exit
 ```
 
 ### Check the various models
 
 ```bash
-path_to_R_script=/mnt/shared/scratch/tadams/git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/tree_creation/model_check.R
-input_file=results/msa_filtered.fasta
-sbatch /mnt/shared/scratch/tadams/git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/tree_creation/model_check.sh $path_to_R_script $input_file
+input_file=/path/to/cleaned/alignment
+/path/to/model_check.R --inp $input_file
 ```
 
 ### Load model testing results and pick which to use
-
-```bash
-screen -
-srsh
-conda activate r_phylogeny
-R
-```
 
 ```R
 # Load libraries
@@ -238,7 +233,7 @@ library("phangorn")
 
 # Load in previous data and view the model scores
 
-mt_clean_pars <- readRDS("results/intermediate/mt_clean_pars.rds")
+mt_clean_pars <- readRDS("/path/to/cleaned/data/R/object")
 mt_clean_pars[order(mt_clean_pars$BIC, decreasing = FALSE), ]
 
 # Select the model with the lowest BIC value, in this case JTT+G
@@ -246,30 +241,17 @@ mt_clean_pars[order(mt_clean_pars$BIC, decreasing = FALSE), ]
 quit()
 ```
 
-```bash
-exit
-exit
-```
-
 ### Create an initial tree
 
 ```bash
-path_to_R_script=/mnt/shared/scratch/tadams/git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/tree_creation/build_tree.R
-input=results/msa_filtered.fasta
+input=/path/to/cleaned/fasta
 inv=FALSE
 gamma=TRUE
-output=results/tree_clean_noBS_pars.tre
-sbatch /mnt/shared/scratch/tadams/git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/tree_creation/build_tree.sh $path_to_R_script $input $inv $gamma $output
+output=/path/to/write/initial/tree
+/path/to/build_tree.R --inp $input --inv $inv --gamma $gamma --outp $output
 ```
 
 ### OPTIONAL - make a re-rooted DRAFT tree as a quick first-look
-
-```bash
-screen -
-srsh
-conda activate r_phylogeny
-R
-```
 
 ```R
 # Load required libraries
@@ -279,7 +261,7 @@ library("phangorn")
 
 # Load DRAFT tree
 
-tree_clean_pars <- read.tree("results/tree_clean_noBS_pars.tre")
+tree_clean_pars <- read.tree("/path/to/initial/tree")
 
 # Identify outgroup sequences
 
@@ -293,31 +275,18 @@ tree_clean_pars_root <- root(tree_clean_pars, outgroup = outgroup, resolve.root 
 
 # Save re-rooted tree
 
-write.tree(tree_clean_pars_root, file = "results/tree_rooted_clean_noBS_pars.tre")
+write.tree(tree_clean_pars_root, file = "/path/to/rooted/tree")
 
 quit()
-```
-
-```bash
-exit
-exit
 ```
 
 ### Bootstrap the tree - for the exemplar tree this took 15 hours
 
 ```bash
-path_to_R_script=/mnt/shared/scratch/tadams/git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/tree_creation/bootstrap_tree.R
-sbatch /mnt/shared/scratch/tadams/git_repos/JHI_Code/Gpa5_RenSeq_paper_prep/tree_creation/bootstrap_tree.sh $path_to_R_script
+/path/to/bootstrap_tree.R --cores /number/of/threads/to/use
 ```
 
 ### Load bootstraps onto tree and re-root it
-
-```bash
-screen -
-srsh
-conda activate r_phylogeny
-R
-```
 
 ```R
 # Load required libraries
@@ -327,8 +296,8 @@ library("phangorn")
 
 # Load previous results
 
-fit_clean_opt <- readRDS("results/intermediate/fit_clean_opt_pars.rds")
-bs_clean_pars <- readRDS("results/bs_clean_pars1000.rds")
+fit_clean_opt <- readRDS("/path/to/tree/R/data/object")
+bs_clean_pars <- readRDS("/path/to/bootstrapped/data/object")
 
 # Adds bootstraps to tree
 
@@ -346,7 +315,7 @@ tree_clean_pars_bs_root <- root(tree_clean_pars_bs, outgroup = outgroup, resolve
 
 # Save re-rooted tree
 
-write.tree(tree_clean_pars_bs_root, file = "results/tree_rooted_clean_BS1000_pars.tre")
+write.tree(tree_clean_pars_bs_root, file = "/path/to/write/bootstrapped/tree")
 
 # Remove bootstrap values to allow partitioning
 
@@ -354,22 +323,17 @@ tree_clean_pars_bs_root$node.label <- NULL
 
 # Save tree without bootstrap values
 
-write.tree(tree_clean_pars_bs_root, file = "results/tree_rooted_clean_BS1000_noBS_pars.tre")
+write.tree(tree_clean_pars_bs_root, file = "/path/to/write/tree/without/bootstrap/values/in/newick")
 
 quit()
-```
-
-```bash
-exit
-exit
 ```
 
 ### Partition the tree
 
 ```bash
-path_to_jar=/mnt/shared/scratch/tadams/apps/PhyloPart_v2.1/PhyloPart_v2.1.jar
-tree=results/tree_rooted_clean_BS1000_noBS_pars.tre
+path_to_jar=/path/to/PhyloPart_v2.1.jar
+tree=/path/to/bootstrapped/tree/without/bootstraps/in/newick
 threshold=0.05
-output=results/tree_part_0_05.txt
-sbatch /mnt/shared/scratch/tadams/git_repos/JHI_Code/H1_Analyses/run_PhyloPart.sh $tree $threshold $output $path_to_jar
+output=/path/to/write/partitioning/results
+java -jar $path_to_jar $tree $threshold -o"$output"
 ```
