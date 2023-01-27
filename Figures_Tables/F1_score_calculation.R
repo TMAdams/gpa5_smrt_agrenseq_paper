@@ -44,6 +44,7 @@ table_order <- function(phenotypice_table, drenseq_score){
   t_order_table <- t(order_table)
   t_order_table <- dplyr::as_tibble(t_order_table, rownames = "gene")
   all_table <- merge(group_list, t_order_table)
+  all_table$association_score <- as.numeric(all_table$association_score)
   order_all_table <- arrange(all_table,desc(association_score))
   final_table <- t(order_all_table)
   colnames(final_table) <- final_table[1,]
@@ -133,6 +134,7 @@ library("lubridate")
 library("reshape2")
 args <- commandArgs(TRUE)
 pwd <- args[1]
+setwd(pwd)
 input_drenseq <- args[2]
 input_phenotype <- args[3]
 input_group_list <- args[4]
