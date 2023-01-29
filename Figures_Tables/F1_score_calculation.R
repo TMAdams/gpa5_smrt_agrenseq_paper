@@ -3,10 +3,10 @@
 #########################calculate F1 score##################################
 matrix_value_calculate <- function(input_table, phe_table, start_col, group_number){
   negative_start <- number_positive + 1
-  TP <- sum(input_table[1:number_positive, start_col:group_number] > 97)
+  TP <- sum(input_table[1:number_positive, start_col:group_number] >= 97)
   FN <- sum(input_table[1:number_positive, start_col:group_number] < 97)
   TN <- sum(input_table[negative_start:nrow(input_table), start_col:group_number] < 97)
-  FP <- sum(input_table[negative_start:nrow(input_table), start_col:group_number] > 97)
+  FP <- sum(input_table[negative_start:nrow(input_table), start_col:group_number] >= 97)
   PPV <- TP/(TP + FP)
   TPR <- TP/(TP + FN)
   F1 <- 2*TP/(2*TP + FP + FN)
@@ -58,7 +58,7 @@ table_order <- function(phenotypice_table, drenseq_score){
 confusion_matrix_creat <- function(group_list, final_table){
   groups_name <- levels(as.factor(group_list[,2]))
   ordered_group_list <- rev(sort(as.numeric(groups_name)))
-  confusion_matrix <- as.data.frame(lapply(data.frame(final_table[4:nrow(final_table)-1, 2:ncol(final_table)], stringsAsFactors = F), as.numeric))
+  confusion_matrix <- as.data.frame(lapply(data.frame(final_table[3:nrow(final_table), 2:ncol(final_table)], stringsAsFactors = F), as.numeric))
   return(list(loop_list=ordered_group_list, con_matrix=confusion_matrix))
 }
 
