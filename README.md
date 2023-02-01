@@ -5,7 +5,7 @@ Scripts utilised in the GPA5 SMrt-AgRenSeq paper
 
 All tree files are in the iToL_tree_configs directory. To replicate the tree figure in the paper do the following:
 
-   * Upload the .tre file to <https://itol.embl/de>
+   * Upload the .tre file to <https://itol.embl.de>
    * Align the node labels to branch tips
    * Load label_colours.txt on to tree
    * Load collapse.txt on to tree
