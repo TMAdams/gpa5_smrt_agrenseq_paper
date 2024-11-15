@@ -52,7 +52,7 @@ profile=/path/to/alignment/of/references
 output=/path/to/write/aligned/output
 iterations=10
 logs=/path/to/write/log
-clustalo --profile1 $profile -i $input -o $output --iterations $iterations --threads /number/of.threads --log $logs
+clustalo --profile1 $profile -i $input -o $output --iterations $iterations --threads /number/of/threads --log $logs
 ```
 ## Begin tree building process
 
