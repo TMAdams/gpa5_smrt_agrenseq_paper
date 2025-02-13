@@ -41,7 +41,7 @@ def create_structures(xml, feature):
     tree = ET.parse(xml)  # Get tree structure of XML file
     root = tree.getroot()  # Get data from XML tree root level
     ns = {'xmlns':
-          'http://www.ebi.ac.uk/interpro/resources/schemas/interproscan5'}
+          'http://ftp.ebi.ac.uk/pub/software/unix/iprscan/5/schemas/interproscan-model-4.5.xsd'}
 # This aids with parsing entries downstream
 # There might be a way to use full paths, but I couldn't get it to work
 # Possible TODO: Clean up searches with XPATH commands
