@@ -54,6 +54,7 @@ iterations=10
 logs=/path/to/write/log
 clustalo --profile1 $profile -i $input -o $output --iterations $iterations --threads /number/of/threads --log $logs
 ```
+
 ## Begin tree building process
 
 ### Check alignment
